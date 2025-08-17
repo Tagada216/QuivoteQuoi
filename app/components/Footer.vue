@@ -11,95 +11,119 @@ const lastImportText = computed(() => {
     ? "—"
     : d.toLocaleString("fr-FR", { dateStyle: "long", timeStyle: "short" });
 });
+
+const scrollToTop = () => {
+  window?.scrollTo({ top: 0, behavior: "smooth" });
+};
 </script>
 
 <template>
-  <!-- not-prose: évite tout héritage de styles .prose qui gonflent les <img>/<a> -->
   <footer
-    class="not-prose bg-base-200 border-t border-base-300 mt-16"
+    class="not-prose bg-stone-50 border-t-4 border-black mt-16"
     role="contentinfo"
   >
     <div
-      class="container mx-auto px-4 py-10 grid gap-8 md:grid-cols-3 items-start"
+      class="container mx-auto px-4 py-12 grid gap-8 md:grid-cols-3 items-start"
     >
-      <!-- Marque -->
-      <div class="space-y-3">
-        <div class="flex items-center gap-3">
-          <!-- Icône STRICTEMENT bornée -->
-          <img
-            src="/branding/icon.svg"
-            alt=""
-            width="36"
-            height="36"
-            class="footer-logo rounded-lg object-contain shrink-0"
-            aria-hidden="true"
-          />
-          <span class="text-lg font-semibold tracking-tight">QuiVoteQuoi</span>
+      <div class="space-y-4">
+        <div class="flex items-center gap-4">
+          <div
+            class="w-12 h-12 bg-black rounded-xl border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] grid place-items-center"
+          >
+            <img
+              src="/branding/icon.svg"
+              alt=""
+              width="24"
+              height="24"
+              class="footer-logo object-contain shrink-0 invert"
+              aria-hidden="true"
+            />
+          </div>
+          <span class="text-2xl font-black tracking-tight text-black"
+            >QuiVoteQuoi</span
+          >
         </div>
-        <p class="text-sm text-base-content/70 max-w-sm">
+        <p class="text-lg text-gray-800 max-w-sm font-medium leading-relaxed">
           Les votes, en clair. Visualisations pédagogiques et sourcées des
           scrutins publics nominatifs.
         </p>
       </div>
 
-      <!-- Navigation -->
       <nav
         aria-label="Liens de pied de page"
-        class="grid sm:grid-cols-2 gap-2 md:justify-items-start"
+        class="grid sm:grid-cols-2 gap-3 md:justify-items-start"
       >
-        <NuxtLink to="/" class="link link-hover">Accueil</NuxtLink>
-        <NuxtLink to="/methodologie" class="link link-hover"
-          >Méthodologie</NuxtLink
+        <NuxtLink
+          to="/"
+          class="text-black font-bold hover:text-blue-600 transition-colors border-b-2 border-transparent hover:border-blue-600 pb-1"
         >
-        <NuxtLink to="/sources" class="link link-hover">Sources</NuxtLink>
-        <!-- Ajoute plus tard : Mentions, À propos, etc. -->
+          Accueil
+        </NuxtLink>
+        <NuxtLink
+          to="/methodologie"
+          class="text-black font-bold hover:text-blue-600 transition-colors border-b-2 border-transparent hover:border-blue-600 pb-1"
+        >
+          Méthodologie
+        </NuxtLink>
+        <NuxtLink
+          to="/sources"
+          class="text-black font-bold hover:text-blue-600 transition-colors border-b-2 border-transparent hover:border-blue-600 pb-1"
+        >
+          Sources
+        </NuxtLink>
       </nav>
 
-      <!-- Données -->
-      <div class="space-y-2 md:justify-self-end">
-        <h3 class="text-xs font-semibold uppercase tracking-wide opacity-70">
+      <div class="space-y-3 md:justify-self-end">
+        <h3
+          class="text-sm font-black uppercase tracking-wide text-black border-b-2 border-black pb-2"
+        >
           Données
         </h3>
-        <p class="text-sm">
-          Dernier import : <span class="font-medium">{{ lastImportText }}</span>
-        </p>
-        <p class="text-sm">
-          Fréquence :
-          <span class="font-medium">00:00 & 12:00 (Europe/Paris)</span>
-        </p>
-        <p class="text-sm">
-          Source principale :
-          <a
-            class="link"
-            href="https://data.assemblee-nationale.fr/"
-            target="_blank"
-            rel="noopener"
-          >
-            data.assemblee-nationale.fr
-          </a>
-        </p>
+        <div
+          class="bg-white/50 p-4 rounded-xl border-2 border-black/20 space-y-2"
+        >
+          <p class="text-sm text-black">
+            Dernier import :
+            <span class="font-black">{{ lastImportText }}</span>
+          </p>
+          <p class="text-sm text-black">
+            Fréquence :
+            <span class="font-black">00:00 & 12:00 (Europe/Paris)</span>
+          </p>
+          <p class="text-sm text-black">
+            Source principale :
+            <a
+              class="font-black text-blue-600 hover:text-blue-800 underline"
+              href="https://data.assemblee-nationale.fr/"
+              target="_blank"
+              rel="noopener"
+            >
+              data.assemblee-nationale.fr
+            </a>
+          </p>
+        </div>
       </div>
     </div>
 
-    <div class="border-t border-base-300">
+    <div class="border-t-3 border-black bg-black">
       <div
-        class="container mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-3"
+        class="container mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-4"
       >
-        <p class="text-xs text-base-content/60">
+        <p class="text-sm text-white font-bold">
           © {{ new Date().getFullYear() }} QuiVoteQuoi — Visualisation à
           vocation pédagogique.
         </p>
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-6">
           <a
             href="https://github.com/Tagada216"
             target="_blank"
             rel="noopener"
             aria-label="GitHub"
-            class="opacity-70 hover:opacity-100 transition-opacity"
+            class="w-8 h-8 bg-white rounded-lg hover:bg-gray-200 transition-colors grid place-items-center"
           >
             <svg
               viewBox="0 0 24 24"
-              class="w-5 h-5 fill-current"
+              class="w-5 h-5 fill-black"
               aria-hidden="true"
             >
               <path
@@ -112,11 +136,11 @@ const lastImportText = computed(() => {
             target="_blank"
             rel="noopener"
             aria-label="X / Twitter"
-            class="opacity-70 hover:opacity-100 transition-opacity"
+            class="w-8 h-8 bg-white rounded-lg hover:bg-gray-200 transition-colors grid place-items-center"
           >
             <svg
               viewBox="0 0 24 24"
-              class="w-5 h-5 fill-current"
+              class="w-5 h-5 fill-black"
               aria-hidden="true"
             >
               <path
@@ -124,12 +148,12 @@ const lastImportText = computed(() => {
               />
             </svg>
           </a>
-          <a
-            href="#"
-            class="text-xs link"
-            @click.prevent="window?.scrollTo({ top: 0, behavior: 'smooth' })"
-            >Haut de page</a
+          <button
+            class="text-sm font-bold text-white hover:text-gray-300 underline transition-colors"
+            @click="scrollToTop"
           >
+            Haut de page
+          </button>
         </div>
       </div>
     </div>
@@ -137,10 +161,9 @@ const lastImportText = computed(() => {
 </template>
 
 <style scoped>
-/* Clamp absolu de l’icône pour éviter qu’un SVG “têtu” s’étire */
 .footer-logo {
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
   display: block;
 }
 </style>

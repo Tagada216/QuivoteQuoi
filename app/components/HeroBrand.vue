@@ -1,37 +1,32 @@
 <script setup lang="ts">
 defineProps<{ tagline?: string }>();
 const logos = {
-  stacked: "/branding/lockup_stacked.svg", // adapte si besoin
-  horizontal: "/branding/lockup_horizontal.svg", // si tu veux l'utiliser plus tard
+  stacked: "/branding/lockup_stacked.svg",
+  horizontal: "/branding/lockup_horizontal.svg",
 };
 </script>
 
 <template>
-  <section class="relative isolate overflow-hidden">
-    <!-- Couche blobs larges d'ambiance (fond) -->
+  <section class="relative isolate overflow-hidden bg-stone-50">
     <div class="pointer-events-none absolute inset-0 -z-30">
       <div class="bgblob bg1"></div>
       <div class="bgblob bg2"></div>
       <div class="bgblob bg3"></div>
     </div>
 
-    <!-- Voile global + léger blur pour adoucir (sans tout écraser) -->
-    <div class="absolute inset-0 -z-20 bg-base-100/50 backdrop-blur-xl"></div>
+    <div class="absolute inset-0 -z-20 bg-stone-50/80 backdrop-blur-sm"></div>
 
-    <!-- HÉMICYCLE décor + BLOBS DE PARTIS CLIPPÉS DEDANS -->
     <div
       class="absolute inset-x-0 bottom-0 z-10 flex justify-center pointer-events-none"
     >
       <div class="relative w-[min(1200px,92vw)] aspect-[1200/520]">
-        <!-- hémicycle en filigrane -->
         <img
           src="/branding/icon.svg"
           alt=""
           aria-hidden="true"
-          class="absolute inset-0 w-full h-full object-contain opacity-25 md:opacity-30"
-          style="filter: drop-shadow(0 6px 24px rgba(0, 0, 0, 0.12))"
+          class="absolute inset-0 w-full h-full object-contain opacity-30 md:opacity-40"
+          style="filter: drop-shadow(0 8px 32px rgba(0, 0, 0, 0.3))"
         />
-        <!-- couche des blobs "par parti", masquée par la forme de l’hémicycle -->
         <div class="absolute inset-0 party-mask">
           <div class="pblob p-re"></div>
           <div class="pblob p-rn"></div>
@@ -46,53 +41,59 @@ const logos = {
       </div>
     </div>
 
-    <!-- CONTENU -->
     <div class="container mx-auto px-4 relative z-20">
       <div
-        class="min-h-[60svh] md:min-h-[68svh] flex flex-col items-center justify-center text-center gap-6 py-16"
+        class="min-h-[60svh] md:min-h-[68svh] flex flex-col items-center justify-center text-center gap-8 py-16"
       >
-        <!-- plaque de lisibilité (frosted glass) -->
         <div
-          class="glass px-6 py-6 rounded-3xl border border-white/15 shadow-xl"
+          class="bg-white border-4 border-black rounded-3xl shadow-[16px_16px_0px_0px_rgba(0,0,0,1)] p-12 relative overflow-hidden"
         >
-          <!-- Tuile QVQ -->
           <div
-            class="relative mx-auto mb-4 w-28 h-28 md:w-32 md:h-32 rounded-3xl grid place-items-center bg-gradient-to-br from-primary/90 via-secondary/80 to-accent/90 text-base-100 shadow-2xl"
+            class="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent pointer-events-none"
+          ></div>
+
+          <div
+            class="relative mx-auto mb-8 w-32 h-32 md:w-36 md:h-36 rounded-3xl grid place-items-center bg-gradient-to-br from-black via-gray-800 to-black text-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] border-4 border-black"
             aria-label="Icône QuiVoteQuoi"
           >
             <span
-              class="text-3xl md:text-4xl font-black tracking-tight select-none"
+              class="text-4xl md:text-5xl font-black tracking-tight select-none"
               >QVQ</span
             >
-            <span
-              class="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-black/10"
-            ></span>
           </div>
 
-          <div class="space-y-2">
-            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight">
+          <div class="space-y-4 relative">
+            <h1
+              class="text-5xl md:text-7xl font-black tracking-tight text-black"
+            >
               QuiVoteQuoi
             </h1>
-            <p class="text-xl md:text-2xl opacity-90">
+            <p class="text-2xl md:text-3xl font-bold text-gray-800">
               {{ tagline || "Les votes, en clair" }}
             </p>
           </div>
 
           <p
-            class="max-w-2xl mx-auto mt-3 text-base md:text-lg text-base-content/80"
+            class="max-w-2xl mx-auto mt-6 text-lg md:text-xl text-gray-700 font-medium leading-relaxed relative"
           >
-            Visualisez les votes de l’Assemblée nationale par groupes politiques
+            Visualisez les votes de l'Assemblée nationale par groupes politiques
             puis par député, avec des sources officielles et une méthodologie
             transparente.
           </p>
 
-          <div class="flex gap-3 justify-center pt-4">
-            <NuxtLink to="#recherche" class="btn btn-primary"
-              >Explorer</NuxtLink
+          <div class="flex gap-6 justify-center pt-8 relative">
+            <NuxtLink
+              to="#recherche"
+              class="btn bg-blue-500 hover:bg-blue-600 text-white border-4 border-black font-black text-lg px-8 py-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 active:translate-x-1 active:translate-y-1 active:shadow-none"
             >
-            <NuxtLink to="/sources" class="btn btn-ghost"
-              >Sources des données</NuxtLink
+              Explorer
+            </NuxtLink>
+            <NuxtLink
+              to="/sources"
+              class="btn bg-white hover:bg-gray-50 text-black border-4 border-black font-black text-lg px-8 py-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 active:translate-x-1 active:translate-y-1 active:shadow-none"
             >
+              Sources des données
+            </NuxtLink>
           </div>
         </div>
       </div>
@@ -101,9 +102,6 @@ const logos = {
 </template>
 
 <style scoped>
-/* ===============================
-   1) BLOBS D'AMBIANCE (fond)
-   =============================== */
 .bgblob {
   position: absolute;
   border-radius: 9999px;
@@ -119,7 +117,7 @@ const logos = {
   top: -15%;
   background: radial-gradient(
     closest-side,
-    hsl(var(--p, 220 90% 56%)) 0%,
+    hsl(220 90% 56%) 0%,
     transparent 60%
   );
   animation: float1 22s ease-in-out infinite alternate;
@@ -131,7 +129,7 @@ const logos = {
   top: -8%;
   background: radial-gradient(
     closest-side,
-    hsl(var(--s, 280 80% 60%)) 0%,
+    hsl(280 80% 60%) 0%,
     transparent 62%
   );
   animation: float2 26s ease-in-out infinite alternate;
@@ -143,21 +141,15 @@ const logos = {
   bottom: -24%;
   background: radial-gradient(
     closest-side,
-    hsl(var(--a, 170 80% 45%)) 0%,
+    hsl(170 80% 45%) 0%,
     transparent 64%
   );
   animation: float3 30s ease-in-out infinite alternate;
 }
 
-/* ===============================
-   2) BLOBS DE PARTIS dans l’hémicycle
-   - Clippés par le SVG : mask-image
-   - Couleurs avec fallbacks (ajuste au besoin)
-   =============================== */
 .party-mask {
-  /* masque: même SVG que l’image, même boîte */
-  -webkit-mask-image: url("/branding/hemicycle.svg");
-  mask-image: url("/branding/hemicycle.svg");
+  -webkit-mask-image: url("/branding/icon.svg");
+  mask-image: url("/branding/icon.svg");
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   -webkit-mask-size: contain;
@@ -175,7 +167,6 @@ const logos = {
   mix-blend-mode: screen;
   will-change: transform;
 }
-/* positions/animations douces ; réparties en bas */
 .p-re {
   width: 28rem;
   height: 28rem;
@@ -285,20 +276,6 @@ const logos = {
   animation: drift3 34s ease-in-out infinite alternate;
 }
 
-/* ===============================
-   3) Plaque lisible (frosted glass)
-   =============================== */
-.glass {
-  background: color-mix(
-    in oklab,
-    var(--glass, rgba(255, 255, 255, 0.65)) 80%,
-    transparent
-  );
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
-}
-
-/* Animations */
 @keyframes float1 {
   from {
     transform: translate3d(0, 0, 0) scale(1);
@@ -349,7 +326,6 @@ const logos = {
   }
 }
 
-/* Respect des préférences utilisateurs */
 @media (prefers-reduced-motion: reduce) {
   .bgblob,
   .pblob {

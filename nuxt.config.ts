@@ -5,6 +5,10 @@ export default defineNuxtConfig({
   },
   css: [],
   devtools: { enabled: true },
+  modules: ["@nuxt/image"],
+  image: {
+    domains: ["https://iwfrecgbwgjykhghnuue.supabase.co"],
+  },
   runtimeConfig: {
     public: {
       supabaseUrl: process.env.SUPABASE_URL,
