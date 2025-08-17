@@ -41,6 +41,53 @@ const props = withDefaults(
 
 const router = useRouter();
 
+/* ===== Ajout: rotation + plein écran natif (mobile/tablette) ===== */
+const landscape = ref(false);
+const wrap = ref<HTMLElement | null>(null);
+
+function enterFullscreen(el: HTMLElement) {
+  const anyEl = el as any;
+  if (el.requestFullscreen) return el.requestFullscreen();
+  if (anyEl.webkitRequestFullscreen) return anyEl.webkitRequestFullscreen();
+  return Promise.reject();
+}
+function exitFullscreen() {
+  const anyDoc = document as any;
+  if (document.fullscreenElement) return document.exitFullscreen();
+  if (anyDoc.webkitFullscreenElement) return anyDoc.webkitExitFullscreen();
+  return Promise.resolve();
+}
+async function toggleLandscape() {
+  if (!landscape.value) {
+    landscape.value = true;
+    try {
+      if (wrap.value) await enterFullscreen(wrap.value);
+    } catch {
+      /* si refus, on garde juste la rotation */
+    }
+  } else {
+    landscape.value = false;
+    try {
+      await exitFullscreen();
+    } catch {}
+  }
+}
+function onFsChange() {
+  if (!document.fullscreenElement) landscape.value = false;
+}
+onMounted(() => {
+  document.addEventListener("fullscreenchange", onFsChange);
+  document.addEventListener("webkitfullscreenchange" as any, onFsChange as any);
+});
+onBeforeUnmount(() => {
+  document.removeEventListener("fullscreenchange", onFsChange);
+  document.removeEventListener(
+    "webkitfullscreenchange" as any,
+    onFsChange as any
+  );
+});
+
+/* ================== LOGIQUE D’ORIGINE ================== */
 const rows = [50, 70, 90, 110, 130, 127];
 const viewW = 1000,
   viewH = 560;
@@ -145,7 +192,10 @@ const seats = computed<Seat[]>(() => {
   return out;
 });
 
-const wrap = ref<HTMLElement | null>(null);
+function posFromEvt(e: MouseEvent) {
+  const r = wrap.value!.getBoundingClientRect();
+  return { x: e.clientX - r.left, y: e.clientY - r.top };
+}
 const tip = reactive({
   show: false,
   x: 0,
@@ -153,10 +203,6 @@ const tip = reactive({
   name: "",
   slug: null as string | null,
 });
-function posFromEvt(e: MouseEvent) {
-  const r = wrap.value!.getBoundingClientRect();
-  return { x: e.clientX - r.left, y: e.clientY - r.top };
-}
 function onEnter(e: MouseEvent, s: Seat) {
   const p = posFromEvt(e);
   Object.assign(tip, {
@@ -192,36 +238,67 @@ function onKey(e: KeyboardEvent, s: Seat) {
     class="relative p-6 bg-stone-50 border-4 border-black rounded-3xl shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] mx-4"
     ref="wrap"
   >
+    <!-- Bouton: visible < lg, déclenche rotation + fullscreen natif -->
+    <div class="mb-3 lg:hidden relative z-20">
+      <button
+        class="btn btn-sm border-2 border-black bg-white font-black shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+        type="button"
+        :aria-pressed="landscape"
+        @click="toggleLandscape"
+      >
+        {{ landscape ? "Quitter plein écran" : "Mode horizontal plein écran" }}
+      </button>
+    </div>
+
     <div
       class="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent pointer-events-none rounded-2xl"
     ></div>
-    <svg :viewBox="`0 0 ${viewW} ${viewH}`" class="w-full relative z-10">
-      <g>
-        <circle
-          v-for="(s, i) in seats"
-          :key="i"
-          :cx="s.x"
-          :cy="s.y"
-          :r="seatRadius"
-          :fill="s.fill"
-          stroke="#000000"
-          stroke-width="2"
+
+    <!-- En mode horizontal: centre + pivote le SVG; sinon rendu inchangé -->
+    <div
+      :class="
+        landscape
+          ? 'flex items-center justify-center w-[100svw] h-[100svh]'
+          : ''
+      "
+    >
+      <div :class="landscape ? 'transform-gpu rotate-90 origin-center' : ''">
+        <svg
+          :viewBox="`0 0 ${viewW} ${viewH}`"
           :class="
-            s.slug
-              ? 'cursor-pointer hover:stroke-4 hover:r-8 transition-all'
-              : ''
+            landscape
+              ? 'h-[100svh] w-auto relative z-10'
+              : 'w-full relative z-10'
           "
-          role="button"
-          tabindex="0"
-          :aria-label="s.name"
-          @mouseenter="(e)=>onEnter(e as MouseEvent, s)"
-          @mousemove="(e)=>onMove(e as MouseEvent)"
-          @mouseleave="onLeave"
-          @click="go(s.slug)"
-          @keydown="(e)=>onKey(e as KeyboardEvent, s)"
-        />
-      </g>
-    </svg>
+        >
+          <g>
+            <circle
+              v-for="(s, i) in seats"
+              :key="i"
+              :cx="s.x"
+              :cy="s.y"
+              :r="seatRadius"
+              :fill="s.fill"
+              stroke="#000000"
+              stroke-width="2"
+              :class="
+                s.slug
+                  ? 'cursor-pointer hover:stroke-4 hover:r-8 transition-all'
+                  : ''
+              "
+              role="button"
+              tabindex="0"
+              :aria-label="s.name"
+              @mouseenter="(e)=>onEnter(e as MouseEvent, s)"
+              @mousemove="(e)=>onMove(e as MouseEvent)"
+              @mouseleave="onLeave"
+              @click="go(s.slug)"
+              @keydown="(e)=>onKey(e as KeyboardEvent, s)"
+            />
+          </g>
+        </svg>
+      </div>
+    </div>
 
     <div
       v-show="tip.show"

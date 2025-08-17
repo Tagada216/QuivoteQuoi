@@ -32,6 +32,57 @@ const props = withDefaults(
 
 const router = useRouter();
 
+/* ====== Ajout : toggle horizontal + plein écran natif (mobile/tablette) ====== */
+const landscape = ref(false);
+const wrap = ref<HTMLElement | null>(null);
+
+function enterFullscreen(el: HTMLElement) {
+  const anyEl = el as any;
+  if (el.requestFullscreen) return el.requestFullscreen();
+  if (anyEl.webkitRequestFullscreen) return anyEl.webkitRequestFullscreen();
+  return Promise.reject();
+}
+function exitFullscreen() {
+  const anyDoc = document as any;
+  if (document.fullscreenElement) return document.exitFullscreen();
+  if (anyDoc.webkitFullscreenElement) return anyDoc.webkitExitFullscreen();
+  return Promise.resolve();
+}
+
+async function toggleLandscape() {
+  if (!landscape.value) {
+    landscape.value = true;
+    try {
+      if (wrap.value) await enterFullscreen(wrap.value);
+    } catch (e) {
+      // si le navigateur refuse, on garde simplement la rotation
+    }
+  } else {
+    landscape.value = false;
+    try {
+      await exitFullscreen();
+    } catch {}
+  }
+}
+
+function onFsChange() {
+  // si l'utilisateur quitte le plein écran (Esc, geste système), on désactive le mode
+  if (!document.fullscreenElement) landscape.value = false;
+}
+onMounted(() => {
+  document.addEventListener("fullscreenchange", onFsChange);
+  // Safari iOS (legacy)
+  document.addEventListener("webkitfullscreenchange" as any, onFsChange as any);
+});
+onBeforeUnmount(() => {
+  document.removeEventListener("fullscreenchange", onFsChange);
+  document.removeEventListener(
+    "webkitfullscreenchange" as any,
+    onFsChange as any
+  );
+});
+
+/* ================== Géométrie / logique d’origine ================== */
 const rows = [50, 70, 90, 110, 130, 127];
 const viewW = 1000,
   viewH = 560;
@@ -62,9 +113,8 @@ const segments = computed(() => {
 });
 function segForT(t: number) {
   const segs = segments.value;
-  if (segs.length === 0) {
+  if (segs.length === 0)
     return { id: "", color: "#9CA3AF", tStart: 0, tEnd: 1 };
-  }
   for (let i = 0; i < segs.length; i++) {
     const s = segs[i];
     if (s && t >= s.tStart && (t < s.tEnd || i === segs.length - 1)) return s;
@@ -129,8 +179,7 @@ const seats = computed<Seat[]>(() => {
   return out;
 });
 
-// tooltip minimal
-const wrap = ref<HTMLElement | null>(null);
+// tooltip minimal (d’origine)
 const tip = reactive({
   show: false,
   x: 0,
@@ -173,29 +222,56 @@ function onKey(e: KeyboardEvent, s: Seat) {
 </script>
 
 <template>
+  <!-- L’élément qui passe en plein écran = wrap (tooltip OK) -->
   <div class="relative" ref="wrap">
-    <svg :viewBox="`0 0 ${viewW} ${viewH}`" class="w-full">
-      <g>
-        <circle
-          v-for="(s, i) in seats"
-          :key="i"
-          :cx="s.x"
-          :cy="s.y"
-          :r="seatRadius"
-          :fill="s.fill"
-          stroke="rgba(0,0,0,.08)"
-          :class="s.slug ? 'cursor-pointer hover:stroke-black/30' : ''"
-          role="button"
-          tabindex="0"
-          :aria-label="s.name"
-          @mouseenter="(e)=>onEnter(e as MouseEvent, s)"
-          @mousemove="(e)=>onMove(e as MouseEvent)"
-          @mouseleave="onLeave"
-          @click="go(s.slug)"
-          @keydown="(e)=>onKey(e as KeyboardEvent, s)"
-        />
-      </g>
-    </svg>
+    <!-- Bouton : visible uniquement < lg -->
+    <div class="mb-3 lg:hidden">
+      <button
+        class="btn btn-sm border-2 border-black bg-white font-black shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+        type="button"
+        :aria-pressed="landscape"
+        @click="toggleLandscape"
+      >
+        {{ landscape ? "Quitter plein écran" : "Mode horizontal plein écran" }}
+      </button>
+    </div>
+
+    <!-- Conteneur : en mode horizontal, on centre et on pivote le SVG -->
+    <div
+      :class="
+        landscape
+          ? 'flex items-center justify-center w-[100svw] h-[100svh]'
+          : ''
+      "
+    >
+      <div :class="landscape ? 'transform-gpu rotate-90 origin-center' : ''">
+        <svg
+          :viewBox="`0 0 ${viewW} ${viewH}`"
+          :class="landscape ? 'h-[100svh] w-auto' : 'w-full'"
+        >
+          <g>
+            <circle
+              v-for="(s, i) in seats"
+              :key="i"
+              :cx="s.x"
+              :cy="s.y"
+              :r="seatRadius"
+              :fill="s.fill"
+              stroke="rgba(0,0,0,.08)"
+              :class="s.slug ? 'cursor-pointer hover:stroke-black/30' : ''"
+              role="button"
+              tabindex="0"
+              :aria-label="s.name"
+              @mouseenter="(e)=>onEnter(e as MouseEvent, s)"
+              @mousemove="(e)=>onMove(e as MouseEvent)"
+              @mouseleave="onLeave"
+              @click="go(s.slug)"
+              @keydown="(e)=>onKey(e as KeyboardEvent, s)"
+            />
+          </g>
+        </svg>
+      </div>
+    </div>
 
     <div
       v-show="tip.show"

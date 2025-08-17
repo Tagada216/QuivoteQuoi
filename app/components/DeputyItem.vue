@@ -18,18 +18,18 @@ const initials = computed(() => {
   <NuxtLink
     v-if="slug"
     :to="`/depute/${slug}`"
-    class="group flex items-center gap-4 p-4 rounded-xl bg-stone-50 border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-white transition-all duration-150 active:translate-x-1 active:translate-y-1 active:shadow-none"
+    class="group flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-stone-50 border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] active:translate-x-1 active:translate-y-1 active:shadow-none"
   >
     <div v-if="showPhoto" class="shrink-0">
       <NuxtImg
         v-if="photo"
         :src="photo"
         alt=""
-        class="w-12 h-12 rounded-lg object-cover border-2 border-black"
+        class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg object-cover border-2 border-black"
       />
       <div
         v-else
-        class="w-12 h-12 rounded-lg border-2 border-black bg-gradient-to-br from-white to-gray-100 grid place-items-center text-sm font-black text-black"
+        class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg border-2 border-black bg-gradient-to-br from-white to-gray-100 grid place-items-center text-sm font-black text-black"
       >
         {{ initials }}
       </div>
@@ -41,7 +41,7 @@ const initials = computed(() => {
       >
         {{ fullName }}
       </div>
-      <div class="text-sm text-gray-700 font-medium">
+      <div class="text-sm text-gray-500 font-medium">
         <span v-if="departement">{{ departement }}</span>
         <span v-if="circ">&nbsp;· circ. {{ circ }}</span>
       </div>
@@ -50,19 +50,18 @@ const initials = computed(() => {
 
   <div
     v-else
-    class="flex items-center gap-4 p-4 rounded-xl bg-gray-100 border-3 border-gray-400 opacity-60"
-    aria-disabled="true"
+    class="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-stone-50 border-2 border-black"
   >
     <div v-if="showPhoto" class="shrink-0">
       <NuxtImg
         v-if="photo"
         :src="photo"
         alt=""
-        class="w-12 h-12 rounded-lg object-cover border-2 border-gray-400"
+        class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg object-cover border-2 border-black"
       />
       <div
         v-else
-        class="w-12 h-12 rounded-lg border-2 border-gray-400 bg-gradient-to-br from-gray-200 to-gray-300 grid place-items-center text-sm font-black text-gray-600"
+        class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg border-2 border-black bg-gradient-to-br from-white to-gray-100 grid place-items-center text-sm font-black text-black"
       >
         {{ initials }}
       </div>

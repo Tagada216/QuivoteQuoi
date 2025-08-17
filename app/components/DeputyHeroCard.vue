@@ -17,9 +17,10 @@ const props = withDefaults(
 const emit = defineEmits<{ "update:showPhoto": [boolean] }>();
 
 const initials = computed(() => {
-  const parts = props.name.split(/\s+/).filter(Boolean);
   return (
-    parts
+    (props.name || "")
+      .split(/\s+/)
+      .filter(Boolean)
       .slice(0, 2)
       .map((p) => p[0]?.toUpperCase())
       .join("") || "—"
@@ -34,11 +35,13 @@ const initials = computed(() => {
     <div
       class="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent pointer-events-none"
     ></div>
-    <div class="relative card-body p-8 md:flex md:items-center md:gap-8">
+    <div
+      class="relative card-body p-4 sm:p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-6 md:gap-8"
+    >
       <div class="shrink-0">
         <div
           v-if="showPhoto && photoUrl"
-          class="w-32 h-32 md:w-40 md:h-40 rounded-2xl overflow-hidden border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] bg-white"
+          class="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-2xl overflow-hidden border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] bg-white"
         >
           <NuxtImg
             :src="photoUrl"
@@ -48,46 +51,34 @@ const initials = computed(() => {
         </div>
         <div
           v-else
-          class="w-32 h-32 md:w-40 md:h-40 rounded-2xl border-3 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] bg-gradient-to-br from-white to-gray-100 grid place-items-center text-3xl font-black text-black"
+          class="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-2xl border-3 border-black bg-gradient-to-br from-white to-gray-100 grid place-items-center text-3xl font-black text-black"
         >
           {{ initials }}
         </div>
       </div>
 
       <div class="flex-1 min-w-0 mt-6 md:mt-0">
-        <div class="flex items-center gap-4 flex-wrap">
+        <div class="flex items-center gap-3 sm:gap-4 flex-wrap min-w-0">
           <h1 class="text-3xl md:text-4xl font-black tracking-tight text-black">
             {{ name }}
           </h1>
           <span
             v-if="group"
             class="px-4 py-2 rounded-xl font-black text-white border-3 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
-            :style="{
-              background: group.color,
-            }"
+            :style="{ background: group.color }"
           >
             {{ group.acronym }} — {{ group.name }}
           </span>
         </div>
 
-        <div
-          class="mt-3 text-lg text-gray-800 flex flex-wrap items-center gap-x-4 gap-y-2"
-        >
-          <span v-if="departement" class="font-bold">{{ departement }}</span>
-          <span v-if="circ" class="font-medium">· circ. {{ circ }}</span>
-          <span v-if="anId" class="text-gray-600">· id AN {{ anId }}</span>
+        <div class="mt-2 text-gray-700 text-sm md:text-base">
+          <span v-if="departement">{{ departement }}</span>
+          <span v-if="circ">&nbsp;· circ. {{ circ }}</span>
+          <span v-if="anId">&nbsp;· AN: {{ anId }}</span>
         </div>
 
-        <div class="mt-6 flex flex-wrap items-center gap-4">
-          <NuxtLink
-            to="/deputes"
-            class="btn bg-white hover:bg-gray-50 text-black border-3 border-black font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 active:translate-x-1 active:translate-y-1 active:shadow-none"
-          >
-            ← Retour à la liste
-          </NuxtLink>
-          <label
-            class="flex items-center gap-3 cursor-pointer bg-white/50 p-3 rounded-xl border-2 border-black/20"
-          >
+        <div class="mt-6 flex flex-wrap items-center gap-3 sm:gap-4">
+          <label class="inline-flex items-center gap-2 select-none">
             <span class="font-bold text-black">Photo</span>
             <input
               type="checkbox"

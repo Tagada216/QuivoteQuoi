@@ -19,7 +19,7 @@ const props = defineProps<{
         {{ item.title }}
       </h3>
 
-      <div class="mt-2 flex items-center gap-3 text-sm">
+      <div class="mt-2 flex flex-wrap items-center gap-3 text-sm">
         <span class="inline-flex items-center gap-1">
           <i
             class="w-2.5 h-2.5 rounded-full inline-block"
@@ -28,6 +28,25 @@ const props = defineProps<{
           <span class="font-medium">{{ item.counts.POUR }}</span
           ><span class="opacity-70">Pour</span>
         </span>
+
+        <span class="inline-flex items-center gap-1">
+          <i
+            class="w-2.5 h-2.5 rounded-full inline-block"
+            style="background: #f59e0b"
+          ></i>
+          <span class="font-medium">{{ item.counts.ABSTENTION }}</span
+          ><span class="opacity-70">Abst.</span>
+        </span>
+
+        <span class="inline-flex items-center gap-1">
+          <i
+            class="w-2.5 h-2.5 rounded-full inline-block"
+            style="background: #9ca3af"
+          ></i>
+          <span class="font-medium">{{ item.counts.NV }}</span
+          ><span class="opacity-70">N.V.</span>
+        </span>
+
         <span class="inline-flex items-center gap-1">
           <i
             class="w-2.5 h-2.5 rounded-full inline-block"
@@ -39,7 +58,10 @@ const props = defineProps<{
       </div>
 
       <div class="card-actions justify-end mt-3">
-        <NuxtLink class="btn btn-sm btn-primary" :to="`/scrutin/${item.id}`">
+        <NuxtLink
+          class="btn btn-sm btn-primary w-full sm:w-auto"
+          :to="`/scrutin/${item.id}`"
+        >
           Voir le scrutin
         </NuxtLink>
       </div>

@@ -81,7 +81,9 @@ const logos = {
             transparente.
           </p>
 
-          <div class="flex gap-6 justify-center pt-8 relative">
+          <div
+            class="flex flex-col lg:flex-row gap-6 justify-center pt-8 relative"
+          >
             <NuxtLink
               to="#recherche"
               class="btn bg-blue-500 hover:bg-blue-600 text-white border-4 border-black font-black text-lg px-8 py-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all duration-150 active:translate-x-1 active:translate-y-1 active:shadow-none"

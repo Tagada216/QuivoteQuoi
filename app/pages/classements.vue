@@ -98,33 +98,23 @@ useHead(() => ({
 <template>
   <main class="container mx-auto px-4 py-8">
     <header class="mb-6 grid gap-4 lg:grid-cols-[1fr,auto] lg:items-end">
-      <div class="space-y-1.5">
-        <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">
-          Classements thématiques
-        </h1>
-        <p class="text-base md:text-lg font-medium">
-          Les discours ne votent pas. Les députés, si.
-        </p>
-        <p class="text-sm text-base-content/70">
-          Regardez où les promesses s’arrêtent… et où les votes commencent.
-        </p>
-      </div>
-
-      <div class="flex gap-3">
-        <select class="select select-bordered" v-model="leg">
+      <div
+        class="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center"
+      >
+        <select class="select select-bordered w-full lg:w-auto" v-model="leg">
           <option :value="null">XVI + XVII</option>
           <option :value="16">XVI</option>
           <option :value="17">XVII</option>
         </select>
 
-        <select class="select select-bordered" v-model="theme">
+        <select class="select select-bordered w-full lg:w-auto" v-model="theme">
           <option v-for="t in themes || []" :key="t.slug" :value="t.slug">
             {{ t.name }}
           </option>
         </select>
 
         <button
-          class="btn"
+          class="btn w-full lg:w-auto"
           :class="invert ? 'btn-warning' : 'btn-ghost'"
           @click="invert = !invert"
         >

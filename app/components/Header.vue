@@ -11,7 +11,7 @@ const nav: NavItem[] = [
   { label: "Classements thématiques", to: "/classements" },
   { label: "Condamnations", to: "/condamnations" },
   { label: "Députés", to: "/deputes" },
-  { label: "Méthodologie", to: "/methodologie" },
+  { label: "Absences", to: "/absences" },
   { label: "Sources", to: "/sources" },
 ];
 
