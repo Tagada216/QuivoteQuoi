@@ -9,11 +9,9 @@ const UA =
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
-}
+} // remplace par ta clé de service
 
-const SUPABASE_URL = "https://YOUR_REF.supabase.co"; // remplace par ton URL Supabase
-const SUPABASE_KEY = "YOUR_SUPABASE_SERVICE_ROLE_KEY"; // remplace par ta clé de service
-const BUCKET = process.env.QVQ_BUCKET || "deputes";
+const BUCKET = process.env.QVQ_BUCKET;
 if (!SUPABASE_URL || !SUPABASE_KEY) {
   console.error("Missing SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY");
   process.exit(1);
